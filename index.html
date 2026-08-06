@@ -8,94 +8,128 @@
     :root {
       --primary:       #1a3a5c;
       --primary-light: #2e5f8f;
+      --primary-dark:  #12283f;
       --accent:        #f39c12;
       --accent-dark:   #d68910;
-      --bg:            #f0f4f8;
+      --bg:            #f4f6f9;
       --card:          #ffffff;
-      --text:          #2d3436;
-      --muted:         #636e72;
-      --border:        #dfe6e9;
-      --shadow:        0 2px 16px rgba(0,0,0,.07);
-      --radius:        12px;
+      --text:          #1f2937;
+      --muted:         #6b7280;
+      --border:        #e2e8f0;
+      --shadow-sm:     0 1px 3px rgba(15,23,42,.06);
+      --shadow:        0 4px 20px rgba(15,23,42,.08);
+      --shadow-lg:     0 12px 32px rgba(15,23,42,.14);
+      --radius-sm:     8px;
+      --radius:        14px;
+      --radius-lg:     18px;
+      --space-1: .25rem; --space-2: .5rem; --space-3: .75rem;
+      --space-4: 1rem;   --space-5: 1.5rem; --space-6: 2rem;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    html, body { overflow-x: hidden; }
+
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      line-height: 1.45;
     }
 
     /* ───── HEADER ───── */
     header {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: #fff;
-      padding: 1.25rem 2rem;
+      padding: 1.1rem 1.5rem;
+      padding-top: max(1.1rem, env(safe-area-inset-top));
       display: flex;
       align-items: center;
-      gap: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+      gap: .9rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .header-icon { font-size: 2.2rem; }
-    header h1   { font-size: 1.5rem; font-weight: 700; }
-    header p    { font-size: .82rem; opacity: .75; margin-top: .15rem; }
+    .header-icon {
+      font-size: 1.6rem;
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.12);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    header h1   { font-size: 1.25rem; font-weight: 700; letter-spacing: -.01em; }
+    header p    { font-size: .8rem; opacity: .8; margin-top: .1rem; }
 
     /* ───── LAYOUT ───── */
     .container {
       max-width: 960px;
-      margin: 2rem auto;
+      margin: 1.5rem auto;
       padding: 0 1rem;
+      width: 100%;
     }
 
     .card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 1.75rem;
-      box-shadow: var(--shadow);
-      margin-bottom: 1.25rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
     }
     .card-title {
       color: var(--primary);
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       gap: .5rem;
       padding-bottom: .75rem;
-      border-bottom: 2px solid var(--border);
       margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
     }
 
     /* ───── FORM GRID ───── */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.1rem;
+      gap: 1rem;
     }
-    .form-group { display: flex; flex-direction: column; gap: .35rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
     .form-group.full { grid-column: 1 / -1; }
 
     label {
-      font-size: .825rem;
+      font-size: .8rem;
       font-weight: 600;
-      color: var(--text);
+      color: var(--muted);
     }
 
+    /* iOS Safari zoomt Inputs mit font-size < 16px beim Fokussieren automatisch
+       auf — deshalb bleiben alle interaktiven Formularelemente bei >= 16px. */
     input[type="text"],
     input[type="number"],
     input[type="time"],
-    input[type="date"] {
+    input[type="date"],
+    select {
       border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: .55rem .75rem;
-      font-size: .95rem;
+      border-radius: var(--radius-sm);
+      padding: .65rem .8rem;
+      font-size: 16px;
       width: 100%;
-      transition: border-color .2s;
+      min-height: 44px;
+      transition: border-color .15s, box-shadow .15s;
       background: #fff;
+      color: var(--text);
+      font-family: inherit;
     }
-    input:focus { outline: none; border-color: var(--primary); }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(46,95,143,.15);
+    }
 
     /* ───── SLIDERS ───── */
     .slider-row {
@@ -103,40 +137,93 @@
       align-items: center;
       gap: .75rem;
       margin-top: .1rem;
+      min-height: 44px;
     }
     input[type="range"] {
       flex: 1;
       accent-color: var(--accent);
       cursor: pointer;
+      min-height: 44px;
     }
     .slider-val {
       background: var(--primary);
       color: #fff;
-      padding: .2rem .6rem;
-      border-radius: 6px;
-      font-size: .825rem;
+      padding: .25rem .65rem;
+      border-radius: var(--radius-sm);
+      font-size: .8rem;
       font-weight: 700;
-      min-width: 42px;
+      min-width: 44px;
       text-align: center;
+    }
+
+    /* ───── MODE TOGGLE ───── */
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+      background: var(--bg);
+      padding: .35rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1.25rem;
+    }
+    .mode-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .85rem;
+      padding: .7rem .5rem;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all .15s;
+      min-height: 44px;
+    }
+    .mode-btn.active {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hint {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: -.4rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .hint.warn {
+      color: #92400e;
+      background: #fef3d0;
+      padding: .6rem .8rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
     }
 
     /* ───── TEAMS ───── */
     .teams-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
       gap: .6rem;
       margin-top: .5rem;
     }
     .team-input-wrap {
       display: flex;
       align-items: center;
-      gap: .45rem;
+      gap: .5rem;
+    }
+    .team-input-wrap input[type="text"] { min-width: 0; }
+    .team-input-wrap select {
+      width: auto;
+      min-width: 62px;
+      flex-shrink: 0;
+      padding-left: .5rem;
+      padding-right: .5rem;
     }
     .team-num {
       background: var(--primary);
       color: #fff;
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       font-size: .7rem;
       font-weight: 700;
@@ -145,28 +232,49 @@
       justify-content: center;
       flex-shrink: 0;
     }
+    .team-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .75rem;
+    }
+    .btn-tiny {
+      background: var(--bg);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .45rem .8rem;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-tiny:hover { background: var(--border); }
 
     /* ───── BUTTONS ───── */
     .btn {
       border: none;
-      border-radius: 8px;
-      padding: .7rem 1.4rem;
+      border-radius: var(--radius-sm);
+      padding: .75rem 1.4rem;
       font-size: .95rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: .4rem;
-      transition: all .2s;
+      transition: all .15s;
+      min-height: 44px;
     }
     .btn-primary {
       background: var(--accent);
-      color: var(--primary);
+      color: var(--primary-dark);
     }
     .btn-primary:hover {
       background: var(--accent-dark);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(243,156,18,.35);
+      box-shadow: 0 6px 16px rgba(243,156,18,.35);
     }
     .btn-secondary {
       background: var(--primary);
@@ -175,7 +283,7 @@
     .btn-secondary:hover { background: var(--primary-light); }
     .btn-outline {
       background: transparent;
-      border: 2px solid var(--primary);
+      border: 1.5px solid var(--primary);
       color: var(--primary);
     }
     .btn-outline:hover { background: var(--primary); color: #fff; }
@@ -189,28 +297,26 @@
     .btn-generate {
       width: 100%;
       justify-content: center;
-      padding: .9rem;
+      padding: .95rem;
       font-size: 1rem;
     }
 
     /* ───── SUMMARY CARDS ───── */
     .summary-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .75rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: .65rem;
       margin-bottom: 1.25rem;
     }
     .stat-card {
-      flex: 1;
-      min-width: 110px;
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: #fff;
-      border-radius: 10px;
-      padding: .9rem 1rem;
+      border-radius: var(--radius-sm);
+      padding: .9rem .75rem;
       text-align: center;
     }
-    .stat-card .val { font-size: 1.7rem; font-weight: 700; line-height: 1; }
-    .stat-card .lbl { font-size: .72rem; opacity: .8; margin-top: .3rem; }
+    .stat-card .val { font-size: 1.5rem; font-weight: 700; line-height: 1.1; word-break: break-word; }
+    .stat-card .lbl { font-size: .7rem; opacity: .82; margin-top: .3rem; }
 
     /* ───── VIEW TOGGLE ───── */
     .view-toggle {
@@ -219,23 +325,25 @@
       margin-bottom: 1rem;
     }
     .view-btn {
-      background: var(--border);
+      background: var(--bg);
       color: var(--muted);
-      border: none;
-      border-radius: 6px;
-      padding: .4rem .9rem;
-      font-size: .825rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .5rem 1rem;
+      font-size: .82rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all .2s;
+      transition: all .15s;
+      min-height: 40px;
     }
     .view-btn.active {
       background: var(--primary);
       color: #fff;
+      border-color: var(--primary);
     }
 
-    /* ───── SHARED TABLE ───── */
-    .tbl-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+    /* ───── SHARED TABLE (Desktop/Tablet) ───── */
+    .tbl-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
     table { width: 100%; border-collapse: collapse; font-size: .875rem; }
     thead th {
       background: var(--primary);
@@ -246,7 +354,7 @@
       white-space: nowrap;
     }
     tbody tr:nth-child(even) td { background: #f8fafc; }
-    tbody td { padding: .55rem 1rem; border-bottom: 1px solid var(--border); }
+    tbody td { padding: .6rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
 
     /* ───── LIST TABLE ───── */
     .badge-time {
@@ -274,29 +382,50 @@
       padding: .18rem .55rem;
       font-size: .75rem;
       font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-group {
+      background: #e6f6ee;
+      color: #146c43;
+      border-radius: 5px;
+      padding: .18rem .55rem;
+      font-size: .75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-ko {
+      background: #fde3e3;
+      color: #b3261e;
+      border-radius: 5px;
+      padding: .18rem .55rem;
+      font-size: .75rem;
+      font-weight: 700;
+      white-space: nowrap;
     }
     .game-id {
       background: var(--accent);
-      color: var(--primary);
-      width: 24px;
-      height: 24px;
+      color: var(--primary-dark);
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-size: .7rem;
       font-weight: 700;
+      flex-shrink: 0;
     }
     .vs { color: var(--muted); font-size: .8rem; }
     .team-name { font-weight: 600; }
     .round-divider td {
-      background: #f0f4f8 !important;
+      background: var(--bg) !important;
       font-weight: 700;
       font-size: .78rem;
       color: var(--primary);
-      padding: .35rem 1rem;
+      padding: .45rem 1rem;
       border-top: 2px solid var(--accent);
     }
+    .round-divider .badges { display: inline-flex; gap: .4rem; align-items: center; }
 
     /* ───── GRID TABLE ───── */
     .grid-time {
@@ -311,12 +440,13 @@
     .grid-game {
       background: #eaf2ff;
       border-left: 3px solid var(--primary);
-      border-radius: 4px;
-      padding: .4rem .6rem;
+      border-radius: 6px;
+      padding: .5rem .65rem;
       font-size: .82rem;
     }
+    .grid-game.is-ko { background: #fdeceb; border-left-color: #b3261e; }
     .grid-game .g-teams { font-weight: 600; }
-    .grid-game .g-meta  { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
+    .grid-game .g-meta  { font-size: .7rem; color: var(--muted); margin-top: .25rem; display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
     .grid-empty { color: var(--border); font-size: .9rem; text-align: center; }
 
     /* ───── SECTIONS ───── */
@@ -326,7 +456,8 @@
     .site-footer {
       text-align: center;
       padding: 1.5rem 1rem;
-      margin-top: 2rem;
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      margin-top: 1.5rem;
       font-size: .78rem;
       color: var(--muted);
       border-top: 1px solid var(--border);
@@ -355,35 +486,86 @@
       border-radius: var(--radius);
       max-width: 640px;
       width: 100%;
-      max-height: 80vh;
+      max-height: 85vh;
       overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 8px 32px rgba(0,0,0,.2);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-lg);
       position: relative;
     }
-    .modal-box h2 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary); }
+    .modal-box h2 { font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary); }
     .modal-box h3 { font-size: 1rem; margin: 1.2rem 0 .4rem; color: var(--primary-light); }
     .modal-box p { font-size: .88rem; line-height: 1.6; margin-bottom: .6rem; color: var(--text); }
     .modal-close {
       position: absolute;
-      top: .75rem;
-      right: 1rem;
+      top: .6rem;
+      right: .75rem;
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       cursor: pointer;
       color: var(--muted);
       line-height: 1;
+      width: 44px; height: 44px;
     }
     .modal-close:hover { color: var(--text); }
 
     /* ───── RESPONSIVE ───── */
+    @media (max-width: 900px) {
+      .container { max-width: 100%; }
+    }
+
     @media (max-width: 620px) {
       .form-grid { grid-template-columns: 1fr; }
-      header { padding: 1rem; }
-      .container { margin: 1rem auto; }
-      .card { padding: 1.25rem; }
-      .summary-strip .stat-card { min-width: 80px; }
+      header { padding: .9rem 1rem; gap: .7rem; }
+      header h1 { font-size: 1.1rem; }
+      header p { font-size: .74rem; }
+      .container { margin: 1rem auto; padding: 0 .75rem; }
+      .card { padding: 1.1rem; border-radius: var(--radius-sm); }
+      .modal-box { padding: 1.25rem; max-height: 90vh; }
+
+      /* Spielplan-Tabellen: von Tabellenlayout auf Karten/Block-Layout
+         umstellen, statt einer erzwungenen, überbreiten Mini-Tabelle. */
+      .tbl-wrap { border: none; overflow-x: visible; }
+      .tbl-wrap table, .tbl-wrap thead, .tbl-wrap tbody,
+      .tbl-wrap th, .tbl-wrap td, .tbl-wrap tr { display: block; }
+      .tbl-wrap thead { display: none; }
+
+      /* Listenansicht als Karten */
+      #tbl-wrap.list-view tr {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: .75rem .9rem;
+        margin-bottom: .6rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: .4rem .6rem;
+      }
+      #tbl-wrap.list-view tr.round-divider {
+        background: var(--bg);
+        border: none;
+        padding: .5rem .25rem;
+        margin: .5rem 0 .3rem;
+      }
+      #tbl-wrap.list-view td { padding: 0; border: none; background: transparent !important; }
+      #tbl-wrap.list-view td.team-name { flex-basis: 100%; }
+      #tbl-wrap.list-view td.vs { display: none; }
+
+      /* Zeitraster als Karten je Zeit-Slot */
+      #tbl-wrap.grid-view tr {
+        display: block;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: .75rem .9rem;
+        margin-bottom: .6rem;
+      }
+      #tbl-wrap.grid-view td { display: block; padding: 0; border: none; }
+      #tbl-wrap.grid-view td:first-child { margin-bottom: .5rem; }
+      #tbl-wrap.grid-view td.grid-empty { display: none; }
+      #tbl-wrap.grid-view .grid-game { margin-bottom: .5rem; }
+      #tbl-wrap.grid-view .grid-game:last-child { margin-bottom: 0; }
     }
   </style>
 </head>
@@ -393,7 +575,7 @@
   <div class="header-icon">🤾</div>
   <div>
     <h1>Handball Turnierplaner</h1>
-    <p>Spielplanerstellung für Hallenhandball-Turniere · Jeder gegen Jeden</p>
+    <p>Spielplanerstellung für Handballturniere · Rundenturnier & Gruppenphase</p>
   </div>
 </header>
 
@@ -401,6 +583,16 @@
 
   <!-- ═══════════════════════════ KONFIGURATION ═══════════════════════════ -->
   <section id="config-section">
+
+    <!-- Turniermodus -->
+    <div class="card">
+      <div class="card-title">🏆 Turniermodus</div>
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" id="mode-btn-roundrobin" onclick="setMode('roundrobin')">Jeder gegen Jeden</button>
+        <button type="button" class="mode-btn" id="mode-btn-groups" onclick="setMode('groups')">Gruppenphase</button>
+      </div>
+      <div class="hint" id="mode-hint">Alle Teams spielen im Rundenturnier einmal gegeneinander.</div>
+    </div>
 
     <!-- Turnierdaten -->
     <div class="card">
@@ -461,6 +653,41 @@
       </div>
     </div>
 
+    <!-- Gruppenphase-Konfiguration (nur sichtbar im Gruppenmodus) -->
+    <div class="card" id="groups-card" style="display:none">
+      <div class="card-title">🗂️ Gruppenphase</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Anzahl Gruppen</label>
+          <div class="slider-row">
+            <input type="range" id="s-numgroups" min="2" max="4" value="2" />
+            <span class="slider-val" id="d-numgroups">2</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Qualifikanten pro Gruppe (für KO-Runde)</label>
+          <div class="slider-row">
+            <input type="range" id="s-qualifiers" min="1" max="2" value="1" />
+            <span class="slider-val" id="d-qualifiers">1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer">
+          <input type="checkbox" id="f-ko" onchange="onKoToggle()" style="width:auto;min-height:0" />
+          KO-Runde nach der Gruppenphase einplanen
+        </label>
+      </div>
+      <div class="form-group" id="thirdplace-row" style="margin-top:.5rem;display:none">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer">
+          <input type="checkbox" id="f-thirdplace" style="width:auto;min-height:0" />
+          Spiel um Platz 3 einplanen
+        </label>
+      </div>
+      <div class="hint" id="ko-hint" style="display:none"></div>
+    </div>
+
     <!-- Teams -->
     <div class="card">
       <div class="card-title">👥 Teams</div>
@@ -470,6 +697,10 @@
           <input type="range" id="s-teams" min="2" max="16" value="6" />
           <span class="slider-val" id="d-teams">6</span>
         </div>
+      </div>
+      <div class="team-actions-row" id="team-actions-row" style="display:none">
+        <div class="hint" style="margin:0" id="groups-assign-hint">Jedem Team eine Gruppe zuweisen.</div>
+        <button type="button" class="btn-tiny" onclick="autoDistributeGroups()">🔀 Automatisch verteilen</button>
       </div>
       <div id="team-grid" class="teams-grid"></div>
     </div>
@@ -926,6 +1157,12 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
    STATE
 ═══════════════════════════════════════════════════════════════ */
 let STATE = { schedule: [], config: {}, view: 'grid' };
+let currentMode = 'roundrobin'; // 'roundrobin' | 'groups'
+let teamGroups  = {};           // { teamIndex: 'A' | 'B' | ... }
+
+const KO_BRACKETS = { 2: ['Finale'], 4: ['Halbfinale', 'Finale'], 8: ['Viertelfinale', 'Halbfinale', 'Finale'] };
+
+function groupLetter(i) { return String.fromCharCode(65 + i); }
 
 /* ═══════════════════════════════════════════════════════════════
    INIT
@@ -955,18 +1192,97 @@ let STATE = { schedule: [], config: {}, view: 'grid' };
     buildTeamInputs(parseInt(ts.value));
   });
 
+  // Gruppenphase-Slider
+  const ng = document.getElementById('s-numgroups');
+  const ngd = document.getElementById('d-numgroups');
+  ng.addEventListener('input', () => {
+    ngd.textContent = ng.value;
+    buildTeamInputs(parseInt(ts.value)); // Gruppen-Optionen (A/B/C/D) neu aufbauen
+    updateKoHint();
+  });
+
+  const nq = document.getElementById('s-qualifiers');
+  const nqd = document.getElementById('d-qualifiers');
+  nq.addEventListener('input', () => {
+    nqd.textContent = nq.value;
+    updateKoHint();
+  });
+
   buildTeamInputs(6);
 })();
 
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-btn-roundrobin').classList.toggle('active', mode === 'roundrobin');
+  document.getElementById('mode-btn-groups').classList.toggle('active', mode === 'groups');
+  document.getElementById('groups-card').style.display = mode === 'groups' ? 'block' : 'none';
+  document.getElementById('team-actions-row').style.display = mode === 'groups' ? 'flex' : 'none';
+  document.getElementById('mode-hint').textContent = mode === 'groups'
+    ? 'Teams spielen in Gruppen jeweils Jeder-gegen-Jeden; optional folgt eine KO-Runde.'
+    : 'Alle Teams spielen im Rundenturnier einmal gegeneinander.';
+  if (mode === 'groups') updateKoHint();
+  buildTeamInputs(parseInt(document.getElementById('s-teams').value));
+}
+
+function onKoToggle() {
+  const enabled = document.getElementById('f-ko').checked;
+  document.getElementById('thirdplace-row').style.display = enabled ? 'block' : 'none';
+  document.getElementById('ko-hint').style.display = enabled ? 'block' : 'none';
+  updateKoHint();
+}
+
+function updateKoHint() {
+  const hint = document.getElementById('ko-hint');
+  if (!document.getElementById('f-ko').checked) return;
+  const numGroups   = parseInt(document.getElementById('s-numgroups').value);
+  const qualifiers  = parseInt(document.getElementById('s-qualifiers').value);
+  const total = numGroups * qualifiers;
+  if (KO_BRACKETS[total]) {
+    hint.className = 'hint';
+    hint.textContent = `${total} Team(s) qualifizieren sich → KO-Runde: ${KO_BRACKETS[total].join(' → ')}.`;
+  } else {
+    hint.className = 'hint warn';
+    hint.textContent = `${total} Qualifikanten (${numGroups} Gruppen × ${qualifiers}) ergeben kein gültiges KO-Bracket. Unterstützt: 2, 4 oder 8 Teams — bitte Gruppenanzahl oder Qualifikanten anpassen.`;
+  }
+}
+
+function autoDistributeGroups() {
+  const n = parseInt(document.getElementById('s-teams').value);
+  const numGroups = parseInt(document.getElementById('s-numgroups').value);
+  // Schlangenverfahren: 1→A,2→B,...,dann rückwärts, sorgt für ausgeglichene Gruppengrößen
+  let dir = 1, g = 0;
+  for (let i = 0; i < n; i++) {
+    teamGroups[i] = groupLetter(g);
+    if (dir === 1 && g === numGroups - 1) dir = -1;
+    else if (dir === -1 && g === 0) dir = 1;
+    else g += dir;
+  }
+  buildTeamInputs(n);
+}
+
 function buildTeamInputs(n) {
   const grid = document.getElementById('team-grid');
-  const oldVals = Array.from(grid.querySelectorAll('input')).map(i => i.value);
+  const oldVals = Array.from(grid.querySelectorAll('input[type="text"]')).map(i => i.value);
+  const numGroups = currentMode === 'groups' ? parseInt(document.getElementById('s-numgroups').value) : 0;
   grid.innerHTML = '';
   for (let i = 0; i < n; i++) {
     const wrap = document.createElement('div');
     wrap.className = 'team-input-wrap';
+    let groupSelect = '';
+    if (currentMode === 'groups') {
+      if (!teamGroups[i] || groupLetter(numGroups - 1) < teamGroups[i]) {
+        teamGroups[i] = groupLetter(i % numGroups);
+      }
+      let opts = '';
+      for (let g = 0; g < numGroups; g++) {
+        const letter = groupLetter(g);
+        opts += `<option value="${letter}" ${teamGroups[i] === letter ? 'selected' : ''}>${letter}</option>`;
+      }
+      groupSelect = `<select id="g-${i}" aria-label="Gruppe für Team ${i + 1}" onchange="teamGroups[${i}]=this.value">${opts}</select>`;
+    }
     wrap.innerHTML = `<span class="team-num">${i + 1}</span>
-      <input type="text" id="t-${i}" placeholder="Team ${i + 1}" value="${oldVals[i] || ('Team ' + (i + 1))}" />`;
+      <input type="text" id="t-${i}" placeholder="Team ${i + 1}" value="${oldVals[i] || ('Team ' + (i + 1))}" />
+      ${groupSelect}`;
     grid.appendChild(wrap);
   }
 }
@@ -1034,6 +1350,106 @@ function scheduleRounds(rounds, numCourts, gameDur, courtBreak, teamBreak) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   GRUPPENPHASE — Runden gruppenübergreifend mischen (parallele Felder)
+   und optionale KO-Runde anhängen. roundRobin()/scheduleRounds() oben
+   bleiben für den Jeder-gegen-Jeden-Modus unverändert.
+═══════════════════════════════════════════════════════════════ */
+function buildGroupTaggedRounds(groupsMap) {
+  const perGroupRounds = {};
+  Object.keys(groupsMap).forEach(letter => {
+    perGroupRounds[letter] = roundRobin(groupsMap[letter]);
+  });
+  const maxRounds = Math.max(...Object.values(perGroupRounds).map(r => r.length));
+  const tagged = [];
+  for (let r = 0; r < maxRounds; r++) {
+    const matches = [];
+    Object.keys(perGroupRounds).forEach(letter => {
+      (perGroupRounds[letter][r] || []).forEach(([a, b]) => {
+        matches.push({ team1: a, team2: b, group: letter, phase: 'group' });
+      });
+    });
+    tagged.push(matches);
+  }
+  return tagged;
+}
+
+function buildKORounds(numGroups, qualifiersPerGroup, thirdPlace) {
+  const total = numGroups * qualifiersPerGroup;
+  const phaseNames = KO_BRACKETS[total];
+  if (!phaseNames) return [];
+
+  let slots = [];
+  for (let q = 1; q <= qualifiersPerGroup; q++) {
+    for (let g = 0; g < numGroups; g++) slots.push(`${q}. Gruppe ${groupLetter(g)}`);
+  }
+
+  let currentPairs = [];
+  for (let i = 0; i < total / 2; i++) currentPairs.push([slots[i], slots[total - 1 - i]]);
+
+  const rounds = [];
+  phaseNames.forEach((phaseName) => {
+    const roundMatches = currentPairs.map(([a, b]) =>
+      ({ team1: a, team2: b, group: null, phase: 'ko', label: phaseName }));
+    rounds.push(roundMatches);
+
+    const nextPairs = [];
+    for (let i = 0; i < roundMatches.length / 2; i++) {
+      nextPairs.push([`Sieger ${phaseName} ${i * 2 + 1}`, `Sieger ${phaseName} ${i * 2 + 2}`]);
+    }
+    currentPairs = nextPairs;
+  });
+
+  if (thirdPlace && phaseNames.length >= 2) {
+    const semiPhase = phaseNames[phaseNames.length - 2];
+    rounds[rounds.length - 1].push({
+      team1: `Verlierer ${semiPhase} 1`, team2: `Verlierer ${semiPhase} 2`,
+      group: null, phase: 'ko', label: 'Spiel um Platz 3',
+    });
+  }
+
+  return rounds;
+}
+
+function scheduleTaggedRounds(taggedRounds, numCourts, gameDur, courtBreak, teamBreak) {
+  const courtFree = Array(numCourts).fill(0);
+  const teamFree  = {};
+  const result    = [];
+  let   id        = 1;
+
+  taggedRounds.forEach((matchList, ri) => {
+    matchList.forEach(m => {
+      const t1 = m.team1, t2 = m.team2;
+      const ready = Math.max(teamFree[t1] ?? 0, teamFree[t2] ?? 0);
+
+      let bestCourt = 0, bestStart = Infinity;
+      for (let c = 0; c < numCourts; c++) {
+        const s = Math.max(courtFree[c], ready);
+        if (s < bestStart) { bestStart = s; bestCourt = c; }
+      }
+
+      const end = bestStart + gameDur;
+      result.push({
+        id: id++,
+        round: ri + 1,
+        team1: t1,
+        team2: t2,
+        court: bestCourt + 1,
+        startMin: bestStart,
+        endMin:   end,
+        group:    m.group || null,
+        phase:    m.phase || 'group',
+        label:    m.label || null,
+      });
+
+      courtFree[bestCourt] = end + courtBreak;
+      teamFree[t1] = teamFree[t2] = end + teamBreak;
+    });
+  });
+
+  return result;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════════════════════ */
 function minToTime(base, offset) {
@@ -1067,8 +1483,46 @@ function buildSchedule() {
     teams.push(inp?.value.trim() || `Team ${i + 1}`);
   }
 
-  const rounds   = roundRobin(teams);
-  const schedule = scheduleRounds(rounds, numCourts, gameDur, courtBreak, teamBreak);
+  let schedule, groupsMap = null, koEnabled = false, thirdPlace = false, numGroups = null, qualifiers = null;
+
+  if (currentMode === 'groups') {
+    numGroups  = parseInt(document.getElementById('s-numgroups').value);
+    qualifiers = parseInt(document.getElementById('s-qualifiers').value);
+    koEnabled  = document.getElementById('f-ko').checked;
+    thirdPlace = koEnabled && document.getElementById('f-thirdplace').checked;
+
+    groupsMap = {};
+    for (let g = 0; g < numGroups; g++) groupsMap[groupLetter(g)] = [];
+    teams.forEach((teamName, i) => {
+      const letter = teamGroups[i] || groupLetter(i % numGroups);
+      groupsMap[letter].push(teamName);
+    });
+
+    const tooSmall = Object.entries(groupsMap).filter(([, arr]) => arr.length < 2).map(([l]) => l);
+    if (tooSmall.length) {
+      alert(`Jede Gruppe braucht mindestens 2 Teams. Zu wenige Teams in Gruppe ${tooSmall.join(', ')}.`);
+      return;
+    }
+
+    const taggedRounds = buildGroupTaggedRounds(groupsMap);
+
+    let koRounds = [];
+    if (koEnabled) {
+      const total = numGroups * qualifiers;
+      if (KO_BRACKETS[total]) {
+        koRounds = buildKORounds(numGroups, qualifiers, thirdPlace);
+      } else {
+        alert(`KO-Runde übersprungen: ${total} Qualifikanten (${numGroups} Gruppen × ${qualifiers}) ergeben kein gültiges Bracket (unterstützt: 2, 4, 8).`);
+        koEnabled = false;
+      }
+    }
+
+    schedule = scheduleTaggedRounds([...taggedRounds, ...koRounds], numCourts, gameDur, courtBreak, teamBreak);
+  } else {
+    const rounds = roundRobin(teams);
+    schedule = scheduleRounds(rounds, numCourts, gameDur, courtBreak, teamBreak)
+      .map(g => ({ ...g, group: null, phase: 'group', label: null }));
+  }
 
   // Attach human-readable times
   schedule.forEach(g => {
@@ -1077,7 +1531,10 @@ function buildSchedule() {
   });
 
   STATE.schedule = schedule;
-  STATE.config   = { name, date, startTime, numCourts, gameDur, courtBreak, teamBreak, teams, numTeams };
+  STATE.config   = {
+    name, date, startTime, numCourts, gameDur, courtBreak, teamBreak, teams, numTeams,
+    mode: currentMode, groups: groupsMap, numGroups, qualifiers, koEnabled, thirdPlace,
+  };
   STATE.view     = 'grid';
 
   renderSummary();
@@ -1101,12 +1558,21 @@ function renderSummary() {
   const endTime  = minToTime(config.startTime, lastMin);
   const numRounds = Math.max(...schedule.map(g => g.round));
 
+  const groupsCard = config.mode === 'groups'
+    ? `<div class="stat-card"><div class="val">${config.numGroups}</div><div class="lbl">Gruppen</div></div>`
+    : '';
+  const koCard = config.koEnabled
+    ? `<div class="stat-card"><div class="val">✓</div><div class="lbl">KO-Runde</div></div>`
+    : '';
+
   document.getElementById('summary-strip').innerHTML = `
     <div class="stat-card"><div class="val">${config.numTeams}</div><div class="lbl">Teams</div></div>
+    ${groupsCard}
     <div class="stat-card"><div class="val">${schedule.length}</div><div class="lbl">Spiele gesamt</div></div>
     <div class="stat-card"><div class="val">${numRounds}</div><div class="lbl">Runden</div></div>
     <div class="stat-card"><div class="val">${config.numCourts}</div><div class="lbl">Spielfelder</div></div>
     <div class="stat-card"><div class="val">${config.gameDur}'</div><div class="lbl">Spielzeit</div></div>
+    ${koCard}
     <div class="stat-card"><div class="val">${endTime}</div><div class="lbl">Ende (ca.)</div></div>
     <div class="stat-card"><div class="val">${durStr(lastMin)}</div><div class="lbl">Gesamtdauer</div></div>
   `;
@@ -1123,8 +1589,17 @@ function setView(v) {
 }
 
 function renderTable() {
-  document.getElementById('tbl-wrap').innerHTML =
-    STATE.view === 'grid' ? buildGridTable() : buildListTable();
+  const wrap = document.getElementById('tbl-wrap');
+  wrap.className = 'tbl-wrap ' + (STATE.view === 'grid' ? 'grid-view' : 'list-view');
+  wrap.innerHTML = STATE.view === 'grid' ? buildGridTable() : buildListTable();
+}
+
+function gameBadges(g) {
+  let badges = '';
+  if (g.group) badges += `<span class="badge-group">Gruppe ${g.group}</span>`;
+  if (g.phase === 'ko') badges += `<span class="badge-ko">${g.label}</span>`;
+  else badges += `<span class="badge-round">Runde ${g.round}</span>`;
+  return badges;
 }
 
 /* ─── GRID VIEW ─── */
@@ -1144,9 +1619,9 @@ function buildGridTable() {
       const g = schedule.find(x => x.startMin === t && x.court === c);
       if (g) {
         cells += `<td>
-          <div class="grid-game">
+          <div class="grid-game${g.phase === 'ko' ? ' is-ko' : ''}">
             <div class="g-teams">${g.team1} <span class="vs">vs</span> ${g.team2}</div>
-            <div class="g-meta">#${g.id} &middot; bis ${g.endTime} &middot; <span class="badge-round">Runde ${g.round}</span></div>
+            <div class="g-meta">#${g.id} &middot; bis ${g.endTime} &middot; ${gameBadges(g)}</div>
           </div>
         </td>`;
       } else {
@@ -1164,7 +1639,7 @@ function buildGridTable() {
 
 /* ─── LIST VIEW ─── */
 function buildListTable() {
-  const { schedule } = STATE;
+  const { schedule, config } = STATE;
   const sorted = [...schedule].sort((a,b) =>
     a.startMin !== b.startMin ? a.startMin - b.startMin : a.court - b.court
   );
@@ -1174,8 +1649,11 @@ function buildListTable() {
 
   sorted.forEach(g => {
     if (g.round !== prevRound) {
+      const dividerText = g.phase === 'ko'
+        ? 'KO-Runde'
+        : (config.mode === 'groups' ? `Gruppenphase &middot; Runde ${g.round}` : `Runde ${g.round}`);
       rows += `<tr class="round-divider">
-        <td colspan="6">Runde ${g.round}</td>
+        <td colspan="6">${dividerText}</td>
       </tr>`;
       prevRound = g.round;
     }
@@ -1183,7 +1661,7 @@ function buildListTable() {
       <td><span class="game-id">${g.id}</span></td>
       <td><span class="badge-time">${g.startTime}</span></td>
       <td><span class="badge-court">Feld ${g.court}</span></td>
-      <td class="team-name">${g.team1}</td>
+      <td class="team-name">${g.team1}${g.group ? ` <span class="badge-group">${g.group}</span>` : ''}${g.phase === 'ko' ? ` <span class="badge-ko">${g.label}</span>` : ''}</td>
       <td class="vs">vs</td>
       <td class="team-name">${g.team2}</td>
     </tr>`;
@@ -1251,16 +1729,20 @@ function exportPDF() {
   let prevRound = null;
   sorted.forEach(g => {
     if (g.round !== prevRound) {
-      body.push([{ content: `Runde ${g.round}`, colSpan: 7,
+      const dividerText = g.phase === 'ko'
+        ? 'KO-Runde'
+        : (config.mode === 'groups' ? `Gruppenphase – Runde ${g.round}` : `Runde ${g.round}`);
+      body.push([{ content: dividerText, colSpan: 7,
         styles: { fillColor: [240, 244, 248], fontStyle: 'bold',
                   textColor: [26, 58, 92], fontSize: 8 } }]);
       prevRound = g.round;
     }
+    const tag = g.group ? ` [Gr. ${g.group}]` : (g.phase === 'ko' ? ` [${g.label}]` : '');
     body.push([
       g.id,
       g.startTime,
       `Feld ${g.court}`,
-      g.team1,
+      g.team1 + tag,
       'vs',
       g.team2,
       '',  // Ergebnis
@@ -1296,27 +1778,78 @@ function exportPDF() {
   doc.setFontSize(13);
   doc.text(`${config.name} – Abschlusstabelle`, M, 12);
 
-  const standingRows = config.teams.map((t, i) => [i + 1, t, '', '', '', '', '', '', '']);
-  doc.autoTable({
-    head: [['Platz', 'Team', 'Sp', 'S', 'U', 'N', '+Tore', '−Tore', 'Punkte']],
-    body: standingRows,
-    startY: 24,
-    margin: { left: M, right: M },
-    styles:     { fontSize: 9, cellPadding: 3, minCellHeight: 8 },
-    headStyles: { fillColor: [26, 58, 92], textColor: 255, fontStyle: 'bold' },
-    alternateRowStyles: { fillColor: [248, 250, 252] },
-    columnStyles: {
-      0: { cellWidth: 14, halign: 'center' },
-      1: { cellWidth: 'auto' },
-      2: { cellWidth: 12, halign: 'center' },
-      3: { cellWidth: 12, halign: 'center' },
-      4: { cellWidth: 12, halign: 'center' },
-      5: { cellWidth: 12, halign: 'center' },
-      6: { cellWidth: 18, halign: 'center' },
-      7: { cellWidth: 18, halign: 'center' },
-      8: { cellWidth: 18, halign: 'center' },
-    },
-  });
+  const standingHead = [['Platz', 'Team', 'Sp', 'S', 'U', 'N', '+Tore', '−Tore', 'Punkte']];
+  const standingColumnStyles = {
+    0: { cellWidth: 14, halign: 'center' },
+    1: { cellWidth: 'auto' },
+    2: { cellWidth: 12, halign: 'center' },
+    3: { cellWidth: 12, halign: 'center' },
+    4: { cellWidth: 12, halign: 'center' },
+    5: { cellWidth: 12, halign: 'center' },
+    6: { cellWidth: 18, halign: 'center' },
+    7: { cellWidth: 18, halign: 'center' },
+    8: { cellWidth: 18, halign: 'center' },
+  };
+
+  if (config.mode === 'groups' && config.groups) {
+    let cursorY = 24;
+    Object.keys(config.groups).sort().forEach(letter => {
+      if (cursorY > PH - 40) { doc.addPage(); cursorY = 16; }
+      doc.setTextColor(26, 58, 92);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10.5);
+      doc.text(`Gruppe ${letter}`, M, cursorY);
+
+      const rows = config.groups[letter].map((t, i) => [i + 1, t, '', '', '', '', '', '', '']);
+      doc.autoTable({
+        head: standingHead,
+        body: rows,
+        startY: cursorY + 3,
+        margin: { left: M, right: M },
+        styles:     { fontSize: 8.5, cellPadding: 2.5, minCellHeight: 7 },
+        headStyles: { fillColor: [26, 58, 92], textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+        columnStyles: standingColumnStyles,
+      });
+      cursorY = doc.lastAutoTable.finalY + 12;
+    });
+
+    if (config.koEnabled) {
+      if (cursorY > PH - 40) { doc.addPage(); cursorY = 16; }
+      doc.setTextColor(26, 58, 92);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10.5);
+      doc.text('KO-Runde', M, cursorY);
+
+      const koRows = schedule.filter(g => g.phase === 'ko').map(g =>
+        [g.label, g.team1, 'vs', g.team2, g.startTime, `Feld ${g.court}`, '']);
+      doc.autoTable({
+        head: [['Phase', 'Team 1', '', 'Team 2', 'Zeit', 'Feld', 'Ergebnis']],
+        body: koRows,
+        startY: cursorY + 3,
+        margin: { left: M, right: M },
+        styles:     { fontSize: 8.5, cellPadding: 2.5 },
+        headStyles: { fillColor: [26, 58, 92], textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+        columnStyles: {
+          0: { cellWidth: 26 }, 2: { cellWidth: 8, halign: 'center', textColor: [140,140,140] },
+          4: { cellWidth: 18 }, 5: { cellWidth: 18 }, 6: { cellWidth: 22 },
+        },
+      });
+    }
+  } else {
+    const standingRows = config.teams.map((t, i) => [i + 1, t, '', '', '', '', '', '', '']);
+    doc.autoTable({
+      head: standingHead,
+      body: standingRows,
+      startY: 24,
+      margin: { left: M, right: M },
+      styles:     { fontSize: 9, cellPadding: 3, minCellHeight: 8 },
+      headStyles: { fillColor: [26, 58, 92], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      columnStyles: standingColumnStyles,
+    });
+  }
 
   /* ── Footer ── */
   const pages = doc.internal.getNumberOfPages();
