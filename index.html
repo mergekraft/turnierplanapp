@@ -2,7 +2,10 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- viewport-fit=cover ist die Bedingung dafuer, dass env(safe-area-inset-*)
+       auf iOS ueberhaupt Werte liefert; ohne das bleiben alle Insets 0. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FAF7F2" />
   <title>Handball Turnierplaner</title>
   <!--
     Eingebettete Schrift: Archivo (Omnibus-Type), lizenziert unter der
@@ -32,19 +35,32 @@
     }
 
     :root {
-      /* Nasser Sand in der Dämmerung — warm verschobenes Schwarz,
-         kein neutrales Charcoal. */
-      --sand-dusk:   #17120E;
-      --sand-raise:  #221B15;
-      --sand-high:   #2C231B;
-      --chalk:       #F5EFE6;
-      --sand-muted:  #9C8F80;
-      --grill:       #FF6B2C;
-      --pitch:       #2BB6A0;
-      --mustard:     #E8B93B;
+      /* Heller Sand in der Mittagssonne — warm verschobenes Weiß,
+         kein neutrales Grau. Die Token-Namen stammen aus der früheren
+         dunklen Fassung und sind bewusst beibehalten, damit die Regeln
+         darunter unverändert bleiben konnten. Sie bedeuten jetzt:
+           --sand-dusk   der helle Grund (und Text auf dunklen Flächen)
+           --chalk       die dunkle Tinte (und Fläche für dunkle Buttons)
+         Die beiden bilden weiterhin ein Kontrastpaar, nur andersherum. */
+      --sand-dusk:   #FAF7F2;
+      --sand-raise:  #F3EDE3;
+      --sand-high:   #E9E1D5;
+      --chalk:       #1F1913;
+      --sand-muted:  #6E6255;
 
-      --line:        rgba(245,239,230,.09);
-      --line-strong: rgba(245,239,230,.18);
+      /* Die Akzente treten doppelt an. Auf hellem Grund trägt der
+         leuchtende Ton keinen Text mehr (Grill 2,7:1, Pitch 2,4:1),
+         deshalb: der leuchtende Token nur für Flächen, auf denen dunkle
+         Tinte sitzt — die -ink-Variante für Text, Rahmen und schmale
+         Balken. Mustard war nie eine Fläche und wird nur abgedunkelt. */
+      --grill:       #FF6B2C;
+      --grill-ink:   #B8420A;
+      --pitch:       #2BB6A0;
+      --pitch-ink:   #0E7A6A;
+      --mustard:     #7D5C0A;
+
+      --line:        rgba(31,25,19,.11);
+      --line-strong: rgba(31,25,19,.26);
 
       --radius-sm: 4px;
       --radius:    8px;
@@ -56,15 +72,21 @@
 
       --sheet-label: 190px;
 
-      /* Regler, Datums- und Zeitauswahl übernehmen damit die dunkle
-         Darstellung des Browsers statt hell aus dem Rahmen zu fallen. */
-      color-scheme: dark;
+      /* Regler, Datums- und Zeitauswahl übernehmen damit die helle
+         Darstellung des Browsers statt dunkel aus dem Rahmen zu fallen. */
+      color-scheme: light;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-    html, body { overflow-x: hidden; }
+    /* clip statt hidden: hidden macht <html> zum Scroll-Container, und
+       zusammen mit der sticky Topbar zeichnet iOS Safari den geklebten
+       Bereich beim Scrollen nicht sauber neu — es bleiben Reste über der
+       Statusleiste stehen. clip beschneidet ohne Scroll-Container, sticky
+       funktioniert weiter. Auf iOS < 16 faellt die Deklaration weg: dann
+       ist horizontales Scrollen wieder moeglich, aber nichts verschmiert. */
+    html, body { overflow-x: clip; }
 
     body {
       font-family: var(--font);
@@ -105,6 +127,8 @@
       gap: .7rem;
       padding: .8rem 1.5rem;
       padding-top: max(.8rem, env(safe-area-inset-top));
+      padding-left: max(1.5rem, env(safe-area-inset-left));
+      padding-right: max(1.5rem, env(safe-area-inset-right));
       border-bottom: 1px solid var(--line);
       background: var(--sand-dusk);
       position: sticky;
@@ -134,10 +158,14 @@
     }
 
     /* ───── LAYOUT ───── */
+    /* Mit viewport-fit=cover reicht der Inhalt bis unter Notch und
+       Home-Indicator — im Querformat muss der Rand deshalb mitwachsen. */
     .container {
       max-width: 1020px;
       margin: 0 auto;
       padding: 0 1.5rem 4rem;
+      padding-left: max(1.5rem, env(safe-area-inset-left));
+      padding-right: max(1.5rem, env(safe-area-inset-right));
       width: 100%;
     }
 
@@ -163,7 +191,7 @@
     }
     .hero-line em {
       font-style: normal;
-      color: var(--grill);
+      color: var(--grill-ink);
     }
 
     /* ───── SIGNATUR: DER TAG ─────
@@ -208,7 +236,7 @@
       position: relative;
       flex: 1;
       height: 24px;
-      background: rgba(245,239,230,.05);
+      background: rgba(31,25,19,.07);
       border-radius: 2px;
       overflow: hidden;
     }
@@ -221,8 +249,10 @@
       min-width: 2px;
       transition: left .18s ease, width .18s ease;
     }
-    .blk.is-ko    { background: var(--pitch); }
-    .blk.is-final { background: var(--grill); }
+    /* Die Balken tragen keinen Text, muessen sich aber gegen Spur und
+       Grund behaupten — dafuer die abgedunkelten Toene. */
+    .blk.is-ko    { background: var(--pitch-ink); }
+    .blk.is-final { background: var(--grill-ink); }
     .day-foot {
       margin-top: .9rem;
       padding-top: .8rem;
@@ -233,7 +263,7 @@
       letter-spacing: .06em;
     }
     .day-foot b { color: var(--chalk); font-weight: 700; }
-    .day.is-invalid .day-foot { color: var(--grill); }
+    .day.is-invalid .day-foot { color: var(--grill-ink); }
 
     /* ───── DATENBLATT ─────
        Jede Zeile ist eine Entscheidung: Label links, Steuerung rechts. */
@@ -290,11 +320,11 @@
       border-radius: var(--radius-sm);
       transition: border-color .15s, background .15s;
     }
-    input[type="text"]::placeholder { color: rgba(156,143,128,.6); }
+    input[type="text"]::placeholder { color: rgba(110,98,85,.85); }
     input[type="text"]:focus,
     input[type="date"]:focus,
     input[type="time"]:focus,
-    select:focus { border-color: var(--grill); background: var(--sand-high); }
+    select:focus { border-color: var(--grill-ink); background: var(--sand-high); }
     select {
       appearance: none;
       background-image: linear-gradient(45deg, transparent 50%, var(--sand-muted) 50%),
@@ -315,7 +345,7 @@
     input[type="range"] {
       flex: 1;
       min-width: 0;
-      accent-color: var(--grill);
+      accent-color: var(--grill-ink);
       cursor: pointer;
       min-height: 46px;
       background: transparent;
@@ -341,7 +371,7 @@
     }
     .slider-val::-webkit-outer-spin-button,
     .slider-val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    .slider-val:focus { border-color: var(--grill); background: var(--sand-high); }
+    .slider-val:focus { border-color: var(--grill-ink); background: var(--sand-high); }
     .slider-unit {
       font-stretch: 62%;
       font-weight: 700;
@@ -371,6 +401,10 @@
       font-size: .74rem;
       padding: .75rem 1.2rem;
       min-height: 46px;
+      /* In .row-body.stack (Flex-Column, align-items: stretch) wird .seg
+         auf volle Zeilenbreite gedehnt. Ohne flex behielten die Buttons
+         Inhaltsbreite und rechts blieb ein leeres Segment stehen. */
+      flex: 1 1 auto;
       border: none;
       background: transparent;
       color: var(--sand-muted);
@@ -414,8 +448,8 @@
       background: var(--sand-muted);
       transition: transform .15s, background .15s;
     }
-    .check input[type="checkbox"]:checked { background: var(--grill); border-color: var(--grill); }
-    .check input[type="checkbox"]:checked::after { transform: translateX(18px); background: var(--sand-dusk); }
+    .check input[type="checkbox"]:checked { background: var(--grill); border-color: var(--grill-ink); }
+    .check input[type="checkbox"]:checked::after { transform: translateX(18px); background: var(--chalk); }
 
     /* ───── HINWEISE ───── */
     .hint {
@@ -424,8 +458,8 @@
       color: var(--sand-muted);
     }
     .hint.warn {
-      color: var(--grill);
-      border-left: 2px solid var(--grill);
+      color: var(--grill-ink);
+      border-left: 2px solid var(--grill-ink);
       padding-left: .7rem;
     }
 
@@ -476,10 +510,13 @@
       gap: .5rem;
       transition: background .15s, color .15s, border-color .15s;
     }
-    .btn-primary { background: var(--grill); color: var(--sand-dusk); }
-    .btn-primary:hover { background: #FF8551; }
+    /* Auf dem leuchtenden Orange traegt nur die dunkle Tinte; heller Text
+       kaeme auf 2,8:1. Beide Hover-Zustaende gehen jetzt nach dunkler
+       statt nach heller, weil der Grund selbst hell ist. */
+    .btn-primary { background: var(--grill); color: var(--chalk); }
+    .btn-primary:hover { background: #E4571C; }
     .btn-secondary { background: var(--chalk); color: var(--sand-dusk); }
-    .btn-secondary:hover { background: #fff; }
+    .btn-secondary:hover { background: #0D0A07; }
     .btn-outline { background: transparent; border-color: var(--line-strong); color: var(--chalk); }
     .btn-outline:hover { border-color: var(--chalk); }
     .btn-tiny {
@@ -595,7 +632,7 @@
     }
     .badge-round { color: var(--sand-muted); border: 1px solid var(--line-strong); }
     .badge-group { color: var(--chalk);     border: 1px solid var(--line-strong); }
-    .badge-ko    { color: var(--sand-dusk); background: var(--pitch); }
+    .badge-ko    { color: var(--chalk); background: var(--pitch); }
     .badge-ko.is-final { background: var(--grill); }
 
     /* ───── ZEITRASTER ───── */
@@ -613,8 +650,8 @@
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       padding: .6rem .75rem;
     }
-    .grid-game.is-ko    { border-left-color: var(--pitch); }
-    .grid-game.is-final { border-left-color: var(--grill); }
+    .grid-game.is-ko    { border-left-color: var(--pitch-ink); }
+    .grid-game.is-final { border-left-color: var(--grill-ink); }
     .grid-game .g-teams { font-weight: 600; font-size: .84rem; }
     .grid-game .g-meta {
       margin-top: .3rem;
@@ -625,7 +662,7 @@
       font-size: .68rem;
       color: var(--sand-muted);
     }
-    .grid-empty { color: rgba(156,143,128,.3); text-align: center; }
+    .grid-empty { color: rgba(110,98,85,.45); text-align: center; }
     /* Am Desktop steht das Feld in der Spaltenüberschrift; auf dem Handy
        fällt die Kopfzeile weg, dort muss es an der Karte stehen. */
     .g-court { display: none; }
@@ -659,7 +696,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10,7,5,.8);
+      background: rgba(23,18,14,.6);
       z-index: 9999;
       justify-content: center;
       align-items: center;
@@ -723,8 +760,15 @@
 
     /* ───── RESPONSIV ───── */
     @media (max-width: 760px) {
-      .container { padding: 0 1.1rem 3rem; }
-      .topbar { padding-left: 1.1rem; padding-right: 1.1rem; }
+      .container {
+        padding: 0 1.1rem 3rem;
+        padding-left: max(1.1rem, env(safe-area-inset-left));
+        padding-right: max(1.1rem, env(safe-area-inset-right));
+      }
+      .topbar {
+        padding-left: max(1.1rem, env(safe-area-inset-left));
+        padding-right: max(1.1rem, env(safe-area-inset-right));
+      }
       .topbar-sub { display: none; }
       .hero { padding: 2.5rem 0 1.5rem; }
       .day { padding: 1rem; }
